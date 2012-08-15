@@ -22,7 +22,7 @@ def make_compute(hostname=u'tux-for-test', state=u'active', memory=2000):
     return Compute(hostname, state, memory)
 
 
-def test_adaption():
+def test_adaptation():
     compute = make_compute()
     alsoProvides(compute, IFuncInstalled)
     assert isinstance(IGetComputeInfo(compute, None), FuncGetComputeInfo)
@@ -61,7 +61,7 @@ def test_operate_vm():
 
 
 @unittest.skipUnless(funcd_running, "func not running")
-@run_in_reactor(funcd_running and 2)
+@run_in_reactor(funcd_running and 1)
 def test_activate_compute():
     shutil.copy(os.path.join(opennode.knot.tests.__path__[0], 'u1.xml'), '/tmp/func_vm_test_state.xml')
 
@@ -92,3 +92,21 @@ def test_activate_compute():
             return
 
     assert False
+
+@unittest.skipUnless(funcd_running, "func not running")
+@run_in_reactor(funcd_running and 1)
+@defer.inlineCallbacks
+def test_update_vm():
+    compute = make_compute(hostname=u'localhost')
+    alsoProvides(compute, IFuncInstalled)
+
+    backend = 'test://' + os.path.join(os.getcwd(), "opennode/knot/tests/u1.xml")
+
+    job = IListVMS(compute)
+    res = yield job.run(backend)
+    assert res[1]['name'] == 'vm1'
+    assert res[1]['state'] == 'inactive'
+
+    job = IUpdateVM(compute)
+    res = yield job.run(backend)
+    assert res is None
