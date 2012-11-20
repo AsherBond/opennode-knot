@@ -107,5 +107,5 @@ class IGetHWUptime(IJob):
     """Return uptime of a physical host"""
 
 
-class IPropagateConfig(IJob):
-    """Propagate config changes"""
+class IUpdateVM(IJob):
+    """Update VM configuration"""

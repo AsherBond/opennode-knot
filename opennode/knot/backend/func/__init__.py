@@ -221,7 +221,7 @@ FUNC_ACTIONS = {IGetComputeInfo: 'hardware.info', IStartVM: 'onode.vm.start_vm',
                 IGetRoutes: 'onode.network.show_routing_table',
                 IHostInterfaces: 'onode.host.interfaces',
                 IGetHWUptime: 'onode.host.uptime',
-                IPropagateConfig: 'onode.host.update_config'}
+                IUpdateVM: 'onode.host.update_vm'}
 
 OVERRIDE_EXECUTORS = {
     IDeployVM: AsyncFuncExecutor,
