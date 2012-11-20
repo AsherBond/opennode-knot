@@ -6,11 +6,13 @@ from grokcore.component import context, subscribe
 from twisted.internet import defer
 
 from opennode.knot.backend.compute import format_error
+from opennode.knot.backend.operation import IUpdateVM
+from opennode.knot.backend.v12ncontainer import IVirtualizationContainerSubmitter
 from opennode.knot.model.compute import ICompute, IVirtualCompute
 from opennode.knot.model.machines import IIncomingMachineRequest, IncomingMachineRequest
 from opennode.knot.model.compute import IFuncInstalled
 from opennode.oms.endpoint.ssh.detached import DetachedProtocol
-from opennode.oms.model.form import IModelDeletedEvent, IModelModifiedEvent
+from opennode.oms.model.form import IModelDeletedEvent
 from opennode.oms.model.model.actions import Action, action
 from opennode.oms.util import blocking_yield
 from opennode.oms.zodb import db
@@ -61,26 +63,3 @@ def delete_compute(model, event):
         blocking_yield(RejectHostRequestAction(
             IncomingMachineRequest(model.hostname)).execute(DetachedProtocol(), object()))
 
-
-@subscribe(IVirtualCompute, IModelModifiedEvent)
-@defer.inlineCallbacks
-def handle_virtual_compute_config_change_request(compute, event):
-    update_param_whitelist = ['cpu_limit',
-                              'memory',
-                              'num_cores',
-                              'swap_size']
-
-    params_to_update = filter(lambda k,v: k in update_param_whitelist, event.modified.iteritems())
-
-    if len(params_to_update) == 0:
-        return
-
-    update_values = [v for k,v in sorted(params_to_update, key=lambda k,v: k)]
-
-    submitter = IVirtualizationContainerSubmitter(compute.__parent__)
-    try:
-        yield submitter.submit(IUpdateVM, compute.__name__, *update_values)
-    except Exception:
-        for mk, mv in event.modified.iteritems():
-            setattr(compute, mk, event.original[mk])
-        raise

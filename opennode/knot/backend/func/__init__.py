@@ -14,7 +14,7 @@ from opennode.knot.backend.operation import (IGetComputeInfo, IStartVM, IShutdow
                                              IGetHostMetrics, IGetLocalTemplates, IMinion,
                                              IGetSignedCertificateNames, IGetVirtualizationContainers,
                                              IGetDiskUsage, IGetRoutes, IGetIncomingHosts, ICleanupHost,
-                                             IAcceptIncomingHost, IGetHWUptime)
+                                             IAcceptIncomingHost, IGetHWUptime, IUpdateVM)
 from opennode.knot.model.compute import IFuncInstalled
 from opennode.oms.config import get_config
 from opennode.oms.model.model.proc import Proc

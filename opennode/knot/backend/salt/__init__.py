@@ -14,7 +14,7 @@ from opennode.knot.backend.operation import (IGetComputeInfo, IStartVM, IShutdow
                                              IGetLocalTemplates, IMinion, IGetSignedCertificateNames,
                                              IGetVirtualizationContainers, IGetDiskUsage, IGetRoutes,
                                              IGetIncomingHosts, ICleanupHost,
-                                             IAcceptIncomingHost, IGetHWUptime)
+                                             IAcceptIncomingHost, IGetHWUptime, IUpdateVM)
 from opennode.knot.model.compute import ISaltInstalled
 from opennode.knot.utils.logging import log
 from opennode.oms.config import get_config
@@ -238,6 +238,7 @@ ACTIONS = {
     IStartVM: 'onode.vm_start_vm',
     ISuspendVM: 'onode.vm_suspend_vm',
     IUndeployVM: 'onode.vm_undeploy_vm',
+    IUpdateVM: 'onode.host_update_vm'
     }
 
 OVERRIDE_EXECUTORS = {
