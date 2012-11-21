@@ -10,7 +10,7 @@ from twisted.internet import defer
 from opennode.knot.backend.compute import register_machine
 from opennode.knot.model.machines import IncomingMachines, BaseIncomingMachines
 from opennode.knot.model.compute import ISaltInstalled
-from opennode.oms.model.model.base import  ContainerInjector
+from opennode.oms.model.model.base import ContainerInjector
 
 
 class DummyOptions(object):
@@ -24,6 +24,7 @@ class DummyOptions(object):
         if name == 'config_dir':
             return '/etc/salt'
         return None
+
 
 class SaltKeyAdapter(Key, parsers.ConfigDirMixIn):
     """ Adaptor for Salt key management logic """

@@ -209,7 +209,6 @@ class RebootAction(ComputeAction):
     job = IRebootVM
 
 
-
 class SyncAction(Action):
     """Force compute sync"""
     context(ICompute)
@@ -320,7 +319,7 @@ class SyncAction(Action):
                 self.context.consoles.add(TtyConsole('tty%s' % idx, console['pty']))
             if console['type'] == 'openvz' and not self.context.consoles['tty%s' % idx]:
                 self.context.consoles.add(OpenVzConsole('tty%s' % idx, console['cid']))
-            if console['type'] == 'vnc'  and not self.context.consoles['vnc']:
+            if console['type'] == 'vnc' and not self.context.consoles['vnc']:
                 self.context.consoles.add(VncConsole(
                     self.context.__parent__.__parent__.hostname, int(console['port'])))
 
@@ -370,8 +369,8 @@ class SyncAction(Action):
             if type(disk_usage) is str:
                 raise Exception(disk_usage)
             res = dict((unicode(k), round(float(v[aspect]) / 1024, 2))
-                   for k, v in disk_usage.items()
-                   if v['device'].startswith('/dev/'))
+                       for k, v in disk_usage.items()
+                       if v['device'].startswith('/dev/'))
             res[u'total'] = sum([0.0] + res.values())
             return res
 
@@ -504,7 +503,7 @@ def handle_compute_state_change_request(compute, event):
         action_mapping = {'inactive': {'active': IStartVM},
                           'suspended': {'active': IResumeVM},
                           'active': {'inactive': IShutdownVM,
-                                     'suspended': ISuspendVM},}
+                                     'suspended': ISuspendVM}}
 
         action = action_mapping.get(original, {}).get(modified, None)
         return action
@@ -519,9 +518,9 @@ def handle_compute_state_change_request(compute, event):
     submitter = IVirtualizationContainerSubmitter(compute.__parent__)
     try:
         yield submitter.submit(action, compute.__name__)
-    except Exception as e:
+    except Exception:
         compute.effective_state = event.original['state']
-        raise e
+        raise
     compute.effective_state = event.modified['state']
 
     handle(compute, ModelModifiedEvent({'effective_state': event.original['state']},
@@ -558,12 +557,12 @@ def handle_virtual_compute_config_change_request(compute, event):
                               'num_cores',
                               'swap_size']
 
-    params_to_update = filter(lambda k,v: k in update_param_whitelist, event.modified.iteritems())
+    params_to_update = filter(lambda k, v: k in update_param_whitelist, event.modified.iteritems())
 
     if len(params_to_update) == 0:
         return
 
-    update_values = [v for k,v in sorted(params_to_update, key=lambda k,v: k)]
+    update_values = [v for k, v in sorted(params_to_update, key=lambda k, v: k)]
 
     submitter = IVirtualizationContainerSubmitter(compute.__parent__)
     try:

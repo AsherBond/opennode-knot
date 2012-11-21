@@ -7,7 +7,7 @@ from twisted.internet import defer
 from opennode.knot.backend.compute import register_machine
 from opennode.knot.model.machines import BaseIncomingMachines, IncomingMachines
 from opennode.knot.model.compute import IFuncInstalled
-from opennode.oms.model.model.base import  ContainerInjector
+from opennode.oms.model.model.base import ContainerInjector
 
 
 class IncomingMachinesCertmaster(BaseIncomingMachines):
@@ -16,6 +16,7 @@ class IncomingMachinesCertmaster(BaseIncomingMachines):
     def _get(self):
         cm = certmaster.CertMaster()
         return cm.get_csrs_waiting()
+
 
 class IncomingMachinesInjector(ContainerInjector):
     context(IncomingMachines)

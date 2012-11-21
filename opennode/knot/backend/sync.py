@@ -166,7 +166,7 @@ class SyncDaemonProcess(DaemonProcess):
             oms_root = db.get_root()['oms_root']
             res = [(i, i.hostname) for i in
                    (follow_symlinks(j) for j in oms_root['machines'].listcontent())
-                    if ICompute.providedBy(i)]
+                   if ICompute.providedBy(i)]
             return res
 
         sync_actions = []

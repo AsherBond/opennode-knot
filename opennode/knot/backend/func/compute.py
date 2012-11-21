@@ -6,11 +6,8 @@ from grokcore.component import context, subscribe
 from twisted.internet import defer
 
 from opennode.knot.backend.compute import format_error
-from opennode.knot.backend.operation import IUpdateVM
-from opennode.knot.backend.v12ncontainer import IVirtualizationContainerSubmitter
-from opennode.knot.model.compute import ICompute, IVirtualCompute
 from opennode.knot.model.machines import IIncomingMachineRequest, IncomingMachineRequest
-from opennode.knot.model.compute import IFuncInstalled
+from opennode.knot.model.compute import IFuncInstalled, ICompute
 from opennode.oms.endpoint.ssh.detached import DetachedProtocol
 from opennode.oms.model.form import IModelDeletedEvent
 from opennode.oms.model.model.actions import Action, action
@@ -56,10 +53,8 @@ class RejectHostRequestAction(Action):
             cmd.write("%s\n" % format_error(e))
 
 
-
 @subscribe(ICompute, IModelDeletedEvent)
 def delete_compute(model, event):
     if IFuncInstalled.providedBy(model):
         blocking_yield(RejectHostRequestAction(
             IncomingMachineRequest(model.hostname)).execute(DetachedProtocol(), object()))
-

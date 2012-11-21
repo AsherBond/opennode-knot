@@ -100,7 +100,6 @@ class SyncFuncExecutor(FuncExecutor):
     # so we temporarily avoid calling them again until the blacklist TTL expires
     func_host_blacklist = {}
 
-
     def __init__(self, hostname, func_action, interaction):
         self.hostname = hostname
         self.func_action = func_action
@@ -114,7 +113,7 @@ class SyncFuncExecutor(FuncExecutor):
 
         now = time.time()
         until = self.func_host_blacklist.get(self.hostname, 0) + blacklist_ttl
-        if until > now :
+        if until > now:
             raise Exception("Host %s was temporarily blacklisted. %s s to go" % (self.hostname, until - now))
         if self.hostname in self.func_host_blacklist:
             print "[func] removing %s from blacklist" % self.hostname
@@ -167,8 +166,8 @@ class SyncFuncExecutor(FuncExecutor):
             if principals:
                 principal = principals[0]
                 Proc.register(self.deferred, "/bin/func '%s' call %s %s" % (self.hostname.encode('utf-8'),
-                                                                    self.func_action,
-                                                                    ' '.join(str(i) for i in args)),
+                                                                            self.func_action,
+                                                                            ' '.join(str(i) for i in args)),
                               principal=principal)
 
         return self.deferred
@@ -226,7 +225,8 @@ FUNC_ACTIONS = {IGetComputeInfo: 'hardware.info', IStartVM: 'onode.vm.start_vm',
 OVERRIDE_EXECUTORS = {
     IDeployVM: AsyncFuncExecutor,
     IUndeployVM: AsyncFuncExecutor
-    }
+}
+
 
 # Avoid polluting the global namespace with temporary variables:
 def _generate_classes():

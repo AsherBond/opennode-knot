@@ -232,7 +232,6 @@ class SyncVmsAction(Action):
             if interface['type'] == 'bridge' and isinstance(iface_node, BridgeInterface):
                 iface_node.members = interface['members']
 
-
         # remove interfaces
         for iface_name in local_names.difference(remote_names):
             del local_interfaces[iface_name]

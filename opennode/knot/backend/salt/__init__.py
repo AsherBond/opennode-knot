@@ -39,7 +39,7 @@ class SaltMultiprocessingClient(multiprocessing.Process):
         client = LocalClient(c_path=get_config().get('salt', 'master_config_path', '/etc/salt/master'))
 
         try:
-            log('running action: %s args: %s' %(self.action, self.args), 'salt')
+            log('running action: %s args: %s' % (self.action, self.args), 'salt')
             data = client.cmd(self.hostname, self.action, arg=self.args)
         except SystemExit:
             log('failed action: %s on host: %s' % (self.action, self.hostname), 'salt')
@@ -137,7 +137,7 @@ class SyncSaltExecutor(SaltExecutor):
         now = time.time()
         until = self.host_blacklist.get(self.hostname, 0) + blacklist_ttl
 
-        if until > now :
+        if until > now:
             raise Exception("Host %s was temporarily blacklisted. %s s to go" % (self.hostname, until - now))
 
         if self.hostname in self.host_blacklist:
@@ -194,6 +194,7 @@ class SyncSaltExecutor(SaltExecutor):
 
         return self.deferred
 
+
 class SaltBase(Adapter):
     """Base class for all Salt method calls."""
     context(ISaltInstalled)
@@ -203,7 +204,7 @@ class SaltBase(Adapter):
     __executor__ = None
 
     executor_classes = {'sync': SyncSaltExecutor,
-                        'async': AsyncSaltExecutor,}
+                        'async': AsyncSaltExecutor}
 
     @defer.inlineCallbacks
     def run(self, *args, **kwargs):
@@ -239,12 +240,14 @@ ACTIONS = {
     ISuspendVM: 'onode.vm_suspend_vm',
     IUndeployVM: 'onode.vm_undeploy_vm',
     IUpdateVM: 'onode.host_update_vm'
-    }
+}
+
 
 OVERRIDE_EXECUTORS = {
     IDeployVM: AsyncSaltExecutor,
     IUndeployVM: AsyncSaltExecutor
-    }
+}
+
 
 # Avoid polluting the global namespace with temporary variables:
 def _generate_classes():

@@ -39,7 +39,6 @@ class ISaltInstalled(IManageable):
     """Marker for SaltStack-controlled computes."""
 
 
-
 class ICompute(Interface):
     # Network parameters
     hostname = schema.TextLine(
@@ -162,36 +161,36 @@ class Compute(Container):
     """A compute node."""
 
     implements(ICompute, IDisplayName, IMarkable)
-    permissions(dict(hostname = ('read', 'modify'),
-                     ipv4_address = ('read', 'modify'),
-                     ipv6_address = ('read', 'modify'),
-                     nameservers = ('read', 'modify'),
-                     dns_domains = ('read', 'modify'),
-                     architecture = ('read', 'modify'),
-                     cpu_info = ('read', 'modify'),
-                     os_release = ('read', 'modify'),
-                     kernel = ('read', 'modify'),
-                     state = ('read', 'modify'),
-                     effective_state = ('read', 'modify'),
-                     num_cores = ('read', 'modify'),
-                     memory = ('read', 'modify'),
-                     diskspace = ('read', 'modify'),
-                     network = ('read', 'modify'),
-                     uptime = ('read', 'modify'),
-                     swap_size = ('read', 'modify'),
-                     cpu_usage = ('read'),
-                     memory_usage = ('read'),
-                     diskspace_usage = ('read'),
-                     network_usage = ('read'),
-                     cpu_limit = ('read', 'modify'),
-                     template = ('read', 'modify'),
-                     autostart = ('read', 'modify'),
+    permissions(dict(hostname=('read', 'modify'),
+                     ipv4_address=('read', 'modify'),
+                     ipv6_address=('read', 'modify'),
+                     nameservers=('read', 'modify'),
+                     dns_domains=('read', 'modify'),
+                     architecture=('read', 'modify'),
+                     cpu_info=('read', 'modify'),
+                     os_release=('read', 'modify'),
+                     kernel=('read', 'modify'),
+                     state=('read', 'modify'),
+                     effective_state=('read', 'modify'),
+                     num_cores=('read', 'modify'),
+                     memory=('read', 'modify'),
+                     diskspace=('read', 'modify'),
+                     network=('read', 'modify'),
+                     uptime=('read', 'modify'),
+                     swap_size=('read', 'modify'),
+                     cpu_usage=('read'),
+                     memory_usage=('read'),
+                     diskspace_usage=('read'),
+                     network_usage=('read'),
+                     cpu_limit=('read', 'modify'),
+                     template=('read', 'modify'),
+                     autostart=('read', 'modify'),
                      ))
 
     __contains__ = IInCompute
 
     __markers__ = [IVirtualCompute, IDeployed, IUndeployed, IDeploying, IZabbixConfiguration, IManageable,
-                  ISaltInstalled, IFuncInstalled]
+                   ISaltInstalled, IFuncInstalled]
 
     _ipv4_address = u'0.0.0.0/32'
     ipv6_address = u'::/128'
@@ -368,7 +367,7 @@ class ComputeTags(ModelTags):
 
         from opennode.knot.model.virtualizationcontainer import IVirtualizationContainer
         if (IVirtualCompute.providedBy(self.context) and
-            IVirtualizationContainer.providedBy(self.context.__parent__)):
+                IVirtualizationContainer.providedBy(self.context.__parent__)):
             res.append(u'virt_type:' + self.context.__parent__.backend)
             res.append(u'virt:yes')
         else:
@@ -378,9 +377,9 @@ class ComputeTags(ModelTags):
         if config.has_section('netenv-tags'):
             for tag, nets in config.items('netenv-tags'):
                 try:
-                    if self.context.ipv4_address is not None and \
-                     len(netaddr.all_matching_cidrs(self.context.ipv4_address.split('/')[0],
-                                                    nets.split(','))) > 0:
+                    if (self.context.ipv4_address is not None and
+                        len(netaddr.all_matching_cidrs(self.context.ipv4_address.split('/')[0],
+                                                       nets.split(','))) > 0):
                         res.append(u'env:' + tag)
                 except ValueError:
                     # graceful ignoring of incorrect ips
@@ -412,7 +411,8 @@ class Computes(AddingContainer):
                 if ICompute.providedBy(item):
                     computes[item.__name__] = Symlink(item.__name__, item)
                 if (isinstance(item, Machines) or isinstance(item, Computes) or
-                    ICompute.providedBy(item) or IVirtualizationContainer.providedBy(item)):
+                        ICompute.providedBy(item) or IVirtualizationContainer.providedBy(item)):
+
                     if item.__name__ not in seen:
                         seen.add(item.__name__)
                         collect(item)
@@ -438,7 +438,7 @@ class ComputesRootInjector(ContainerInjector):
 
 
 provideAdapter(adapter_value(['cpu_usage', 'memory_usage', 'network_usage', 'diskspace_usage']),
-               adapts=(Compute,), provides=(IMetrics))
+               adapts=(Compute, ), provides=IMetrics)
 
 
 provideSubscriptionAdapter(ActionsContainerExtension, adapts=(Compute, ))
